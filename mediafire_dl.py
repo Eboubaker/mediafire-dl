@@ -8,42 +8,48 @@ import re
 import shutil
 import sys
 import tempfile
-import requests
 import six
 import tqdm
+import requests
+import sys
 
 CHUNK_SIZE = 512 * 1024  # 512KB
 
-def extractDownloadLink(contents):
-    for line in contents.splitlines():
-        m = re.search(r'href="((http|https)://download[^"]+)', line)
-        if m:
-            return m.groups()[0]
+def extractDownloadLink(url):
+    user_agent = None
+    try:
+        from seleniumbase import SB
+        from seleniumbase.config import settings
+        settings.HIDE_DRIVER_DOWNLOADS = True
+
+        with SB(uc=True, incognito=True, locale="en", ad_block=True, ) as sb:
+            user_agent = sb.get_user_agent()
+            sb.uc_open_with_reconnect(url, 4)
+            sb.uc_gui_click_captcha()
+            download_link = sb.find_element("css selector", "a[href^='https://download']")
+            link = download_link.get_attribute("href")
+            return link
+
+    except Exception as e:
+        print(f"ERROR: {e}, user agent: {user_agent}", file=sys.stderr,)
+        sys.exit(1)
 
 def download(url, output=None, quiet=False):
     url_origin = url
-    sess = requests.session()
-    sess.headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.5481.178 Safari/537.36"
-    }
 
-    while True:
-        res = sess.get(url, stream=True)
-        if 'Content-Disposition' in res.headers:
-            # This is the file
-            break
+    # Need to redirect with confiramtion
+    url = extractDownloadLink(url)
 
-        # Need to redirect with confiramtion
-        url = extractDownloadLink(res.text)
-
-        if url is None:
-            print('Permission denied: %s' % url_origin, file=sys.stderr)
-            print(
-                "Maybe you need to change permission over "
-                "'Anyone with the link'?",
-                file=sys.stderr,
-            )
-            return
+    if url is None:
+        print('Permission denied: %s' % url_origin, file=sys.stderr)
+        print(
+            "Maybe you need to change permission over "
+            "'Anyone with the link'?",
+            file=sys.stderr,
+        )
+        return
+    
+    res = requests.get(url, allow_redirects=False, stream=True)
 
     if output is None:
         m = re.search(
@@ -103,7 +109,7 @@ def download(url, output=None, quiet=False):
 
 
 def main():
-    desc = 'Simple command-line script to download files from mediafire'
+    desc = 'Simple command-line script to download files from mediafire, it uses Seleniumbase to bypass cf challange'
     parser = argparse.ArgumentParser(description=desc)
     parser.add_argument('url', nargs='+')
     parser.add_argument('-o', '--output', help='output filename')

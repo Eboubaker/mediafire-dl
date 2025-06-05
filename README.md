@@ -4,9 +4,9 @@
 
 ## Description
 
-**mediafire-dl** is a script written in Python to automate the download of files from [mediafire.com](https://mediafire.com) with a simple command-line interface.
+**mediafire-dl** is a script written in Python to automate the download of files from [mediafire.com](https://mediafire.com) with a simple command-line interface. it uses Seleniumbase to bypass cf challange
 
-> Much of the code comes from [gdown](https://github.com/wkentaro/gdown)
+> Much of the code comes from [Juvenal-Yescas/mediafire-dl](https://github.com/Juvenal-Yescas/mediafire-dl)
 
 ## Prerequisites
 
@@ -16,7 +16,7 @@ It is necessary to have **python3** and **pip3**
 ## Installation
 
 ```bash
-pip3 install git+https://github.com/Juvenal-Yescas/mediafire-dl
+pip3 install git+https://github.com/Eboubaker/mediafire-dl
 ```
 
 ## Usage
@@ -49,6 +49,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Acknowledgments
 
 * Inspired by :
+* [Juvenal-Yescas/mediafire-dl](https://github.com/Juvenal-Yescas/mediafire-dl)
 * [gdown](https://github.com/wkentaro/gdown)
 * [openload-dl](https://github.com/gius-italy/openload-dl)
 * [mediafire-dl](https://github.com/pythonoma/mediafire-dl)
