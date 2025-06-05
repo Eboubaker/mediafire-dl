@@ -22,6 +22,7 @@ setup(
         "tqdm==4.64.1",
         "six==1.17.0",
         "requests==2.32.3",
+        "pyautogui==0.9.54",
     ],
     entry_points={
         "console_scripts": ["mediafire-dl=mediafire_dl:main"],
