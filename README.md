@@ -18,7 +18,10 @@ It is necessary to have **python3** and **pip3**
 ```bash
 pip3 install git+https://github.com/Eboubaker/mediafire-dl
 ```
-
+```
+docker build -t mediafire-dl .
+docker run -v $(pwd)/downloads:/downloads mediafire-dl [link]
+```
 ## Usage
 
 ### From Command Line
