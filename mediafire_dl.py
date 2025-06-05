@@ -19,8 +19,8 @@ def extractDownloadLink(url):
     user_agent = None
     try:
         from seleniumbase import SB
-        from seleniumbase.config import settings
-        settings.HIDE_DRIVER_DOWNLOADS = True
+        # from seleniumbase.config import settings
+        # settings.HIDE_DRIVER_DOWNLOADS = True
 
         with SB(uc=True, incognito=True, locale="en", ad_block=True, ) as sb:
             user_agent = sb.get_user_agent()
