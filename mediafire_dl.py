@@ -14,15 +14,18 @@ import requests
 import sys
 
 CHUNK_SIZE = 512 * 1024  # 512KB
+args = None
 
 def extractDownloadLink(url):
+    global args
+    
     user_agent = None
     try:
         from seleniumbase import SB
-        # from seleniumbase.config import settings
-        # settings.HIDE_DRIVER_DOWNLOADS = True
+        from seleniumbase.config import settings
+        settings.HIDE_DRIVER_DOWNLOADS = True
 
-        with SB(uc=True, incognito=True, locale="en", ad_block=True, ) as sb:
+        with SB(uc=True, incognito=True, locale="en", ad_block=True) as sb:
             user_agent = sb.get_user_agent()
             sb.uc_open_with_reconnect(url, 4)
             sb.uc_gui_click_captcha()
@@ -109,10 +112,13 @@ def download(url, output=None, quiet=False):
 
 
 def main():
+    global args
     desc = 'Simple command-line script to download files from mediafire, it uses Seleniumbase to bypass cf challange'
     parser = argparse.ArgumentParser(description=desc)
     parser.add_argument('url', nargs='+')
     parser.add_argument('-o', '--output', help='output filename')
+    parser.add_argument('-u', '--user-data-dir', help='--user-data-dir in chrome options', default=None)
+
     args = parser.parse_args()
 
     if len(args.url) == 1 and args.output:
