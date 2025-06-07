@@ -69,7 +69,7 @@ ENV PYTHONUNBUFFERED=1
 ENV CHROME_PATH=/usr/bin/google-chrome-stable
 
 # Create an entrypoint script
-RUN echo '#!/bin/bash\nXvfb :99 -screen 0 1280x800x24 -ac &\nexec mediafire-dl "$@"' > /entrypoint.sh && \
+RUN echo '#!/bin/bash\nXvfb :99 -screen 0 1280x800x24 -ac &\nmediafire-dl "$@"\nchmod -R 777 ."' > /entrypoint.sh && \
     chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
