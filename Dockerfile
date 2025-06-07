@@ -36,6 +36,14 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Download and install specific chromedriver version
+RUN mkdir -p /usr/local/lib/python3.9/site-packages/seleniumbase/drivers/ && \
+    wget -q https://storage.googleapis.com/chrome-for-testing-public/137.0.7151.68/linux64/chromedriver-linux64.zip && \
+    unzip -q chromedriver-linux64.zip && \
+    cp chromedriver-linux64/chromedriver /usr/local/lib/python3.9/site-packages/seleniumbase/drivers/uc_driver && \
+    chmod +x /usr/local/lib/python3.9/site-packages/seleniumbase/drivers/uc_driver && \
+    rm -rf chromedriver-linux64 chromedriver-linux64.zip
+
 # Copy the ad_block extension
 COPY downloaded_files/ad_block /root/.local/share/seleniumbase/extensions/chrome/ad_block
 
